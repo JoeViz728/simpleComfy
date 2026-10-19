@@ -4,6 +4,8 @@
 
 A local front end for ComfyUI. It is meant to use ComfyUI in a simple, user-friendly way, without working in the graph editor.
 
+![Create page](docs/create.jpg)
+
 You pick a preset, write a prompt, and the app builds the graph, queues the job, and pulls missing weights before the job runs. One GPU job runs at a time. The queue keeps its order across restarts, and a running job can be cancelled.
 
 Presets, effects, and video packs are YAML files. The files in this repo are empty samples. Point them at weights you have a license to use.
