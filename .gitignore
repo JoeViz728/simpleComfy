@@ -1,0 +1,28 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# Local config & secrets
+config.toml
+.env
+.env.*
+
+# Runtime data
+data/models/**
+!data/models/.gitkeep
+data/outputs/**
+!data/outputs/.gitkeep
+data/state/**
+!data/state/.gitkeep
+data/hf-cache/
+
+# ComfyUI if vendored under repo
+runtime/
+
+data/uploads/

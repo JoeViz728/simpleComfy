@@ -1,0 +1,8 @@
+id: soft_light
+label: Soft light
+description: Prompt-only soft diffused lighting
+base_families: []
+prompt:
+  prefix: "soft diffused lighting,"
+  suffix: "gentle shadows"
+  negative: "harsh flash"

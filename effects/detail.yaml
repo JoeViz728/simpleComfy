@@ -1,0 +1,9 @@
+id: detail
+label: Detail
+description: Sample image effect limited to one model family, to show the family filter.
+base_families: [sdxl]
+source: ""
+filename: "detail.safetensors"
+weight: 0.6
+prompt:
+  suffix: "fine detail"

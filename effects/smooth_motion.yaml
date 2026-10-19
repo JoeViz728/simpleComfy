@@ -1,0 +1,13 @@
+id: smooth_motion
+label: Smooth motion
+description: Sample video effect. Point high and low at motion files you have a license to use.
+modalities: [img2vid, txt2vid]
+weight: 0.75
+high:
+  source: ""
+  filename: "smooth_motion_high.safetensors"
+low:
+  source: ""
+  filename: "smooth_motion_low.safetensors"
+prompt:
+  suffix: "smooth continuous motion"

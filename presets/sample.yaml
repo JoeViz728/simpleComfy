@@ -1,0 +1,22 @@
+id: sample
+label: Sample
+description: Neutral starter preset. Replace the checkpoint with one you have a license to use.
+base_family: sdxl
+checkpoint_source: ""
+checkpoint_filename: "sample.safetensors"
+size_gb_approx: 6.5
+default_effects: [soft_light]
+suggested_effects: [soft_light, film_still]
+loras: []
+prompt:
+  prefix: "photograph, natural light,"
+  suffix: ""
+  negative: "blurry, low quality"
+sampler:
+  name: dpmpp_2m
+  scheduler: karras
+  steps: 28
+  cfg: 5.0
+size:
+  width: 1024
+  height: 1024

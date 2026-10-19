@@ -1,0 +1,14 @@
+id: motion_b
+label: Motion B
+description: Second sample in the same exclusive group. The later choice wins.
+modalities: [img2vid]
+exclusive_group: motion
+weight: 0.7
+high:
+  source: ""
+  filename: "motion_b_high.safetensors"
+low:
+  source: ""
+  filename: "motion_b_low.safetensors"
+prompt:
+  suffix: "handheld camera"

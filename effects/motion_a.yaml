@@ -1,0 +1,14 @@
+id: motion_a
+label: Motion A
+description: Sample video effect in an exclusive group.
+modalities: [img2vid]
+exclusive_group: motion
+weight: 0.7
+high:
+  source: ""
+  filename: "motion_a_high.safetensors"
+low:
+  source: ""
+  filename: "motion_a_low.safetensors"
+prompt:
+  suffix: "steady camera"

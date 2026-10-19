@@ -1,0 +1,8 @@
+id: film_still
+label: Film still
+description: Prompt-only film still look
+base_families: []
+prompt:
+  prefix: "cinematic film still,"
+  suffix: "subtle film grain"
+  negative: "oversaturated"

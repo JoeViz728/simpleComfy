@@ -1,0 +1,52 @@
+# Copy to config.toml (install script does this once).
+# Secrets: prefer env vars over putting tokens here.
+#   CIVITAI_API_TOKEN, HF_TOKEN, SIMPLECOMFY_API_KEY
+
+[server]
+host = "127.0.0.1"
+port = 8790
+# Optional shared secret (header: X-API-Key)
+api_key = ""
+
+[comfy]
+base_url = "http://127.0.0.1:8188"
+# Empty = do not auto-spawn; set to ComfyUI root (folder with main.py) to manage it
+root = ""
+timeout_s = 600.0
+# WAN video jobs (first run can be slow)
+video_timeout_s = 1800.0
+# LoadImage folder for img2vid; empty = <root>/input
+input_dir = ""
+
+[paths]
+# Empty = <repo>/data
+data_dir = ""
+
+[queue]
+max_in_flight = 1
+max_depth = 16
+# Max jobs created by one generate request (UI batch field)
+max_batch = 8
+
+[models]
+# Missing weights are pulled automatically as the first phase of each generate job.
+# Deliberate POST /v1/presets/{id}/pull remains available for scripts/CLI.
+auto_pull = true
+max_concurrent_downloads = 2
+max_pull_gb = 40.0
+video_pack = "sample"
+
+[civitai]
+base_url = "https://civitai.red"
+# Or set CIVITAI_API_TOKEN in the environment
+api_token = ""
+
+[huggingface]
+# Or set HF_TOKEN
+token = ""
+
+[generate]
+default_width = 1024
+default_height = 1024
+max_width = 2048
+max_height = 2048

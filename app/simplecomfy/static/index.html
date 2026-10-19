@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>simpleComfy</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="app-brand">
+        <h1>simpleComfy</h1>
+        <p class="sub">Generate · queue · history</p>
+        <div id="health" class="health">Checking…</div>
+      </div>
+      <nav class="page-tabs" role="tablist" aria-label="Main">
+        <button type="button" class="page-tab on" id="tab-create" data-page="create" role="tab" aria-selected="true">
+          Create
+        </button>
+        <button type="button" class="page-tab" id="tab-history" data-page="history" role="tab" aria-selected="false">
+          History
+        </button>
+      </nav>
+    </header>
+
+    <!-- ========== CREATE (job queueing) ========== -->
+    <div id="page-create" class="page page-create" role="tabpanel">
+      <div class="layout layout-create">
+        <main class="main">
+          <section class="panel create-panel" id="create-panel">
+            <div class="panel-title-row">
+              <label class="lbl panel-title">New job</label>
+              <span class="hint">Mode · recipe · prompt · queue</span>
+            </div>
+
+            <div class="create-block">
+              <label class="lbl">Mode</label>
+              <div id="modes" class="chips"></div>
+              <div id="panel-vid2vid-ops" hidden>
+                <label class="lbl" style="margin-top:0.75rem">Video → Video</label>
+                <div id="vid2vid-ops" class="chips"></div>
+              </div>
+              <div id="panel-video-profile" hidden>
+                <label class="lbl" style="margin-top:0.75rem" id="lbl-video-profile">Video profile</label>
+                <div id="video-profiles" class="chips"></div>
+              </div>
+              <div id="panel-smooth-factor" hidden>
+                <label class="lbl" style="margin-top:0.75rem">Interpolation</label>
+                <div id="smooth-factors" class="chips"></div>
+              </div>
+              <p id="mode-meta" class="meta"></p>
+            </div>
+
+            <div class="create-block" id="panel-preset">
+              <label class="lbl">Preset</label>
+              <div id="presets" class="chips"></div>
+              <p id="preset-meta" class="meta"></p>
+            </div>
+
+            <div class="create-block" id="panel-effects">
+              <label class="lbl" id="effects-label">Effects <span class="hint" id="effects-hint">(optional · multi-select)</span></label>
+              <div id="effects" class="chips"></div>
+              <p id="effect-meta" class="meta"></p>
+            </div>
+
+            <div class="create-block" id="panel-source" hidden>
+              <label class="lbl" id="source-label">Source</label>
+              <div class="source-actions" id="source-actions-image">
+                <button type="button" id="btn-pick-file" class="ghost small">From disk…</button>
+                <input type="file" id="file-source" accept="image/png,image/jpeg,image/webp,image/gif" hidden />
+                <span class="hint" id="source-hint">or History → Use in</span>
+              </div>
+              <div id="source-preview" class="source-preview empty">Pick from History</div>
+              <p id="source-meta" class="meta"></p>
+            </div>
+
+            <div class="create-block" id="panel-prompt">
+              <label class="lbl" for="prompt" id="prompt-label">Prompt</label>
+              <textarea id="prompt" rows="5" placeholder="Describe the image…"></textarea>
+            </div>
+
+            <details open id="details-advanced" class="create-block advanced-block">
+              <summary>Size &amp; advanced</summary>
+              <div id="panel-negative">
+                <label class="lbl" for="negative">Negative prompt</label>
+                <textarea id="negative" rows="2" placeholder="Optional extras…"></textarea>
+              </div>
+              <div class="row" id="row-seed-size">
+                <div id="field-seed">
+                  <label class="lbl" for="seed">Seed (−1 = random)</label>
+                  <input id="seed" type="number" value="-1" />
+                </div>
+                <div class="field-with-reset" id="field-width">
+                  <div class="lbl-row">
+                    <label class="lbl" for="width">Width</label>
+                    <div class="reset-wrap">
+                      <button type="button" class="icon-btn" id="btn-reset-width" title="Reset size options" aria-label="Reset width options">↺</button>
+                      <div class="reset-menu" id="menu-reset-width" hidden></div>
+                    </div>
+                  </div>
+                  <input id="width" type="number" placeholder="default" />
+                </div>
+                <div class="field-with-reset" id="field-height">
+                  <div class="lbl-row">
+                    <label class="lbl" for="height">Height</label>
+                    <div class="reset-wrap">
+                      <button type="button" class="icon-btn" id="btn-reset-height" title="Reset size options" aria-label="Reset height options">↺</button>
+                      <div class="reset-menu" id="menu-reset-height" hidden></div>
+                    </div>
+                  </div>
+                  <input id="height" type="number" placeholder="default" />
+                </div>
+              </div>
+              <div id="field-video-secs" hidden>
+                <label class="lbl" for="video-secs">Clip length (seconds)</label>
+                <input id="video-secs" type="number" min="1" max="60" step="0.5" value="5" title="Mapped to WAN frame length (4n+1) at pack FPS. Longer than ~5s auto-enables context windows." />
+                <p class="meta" id="video-secs-hint"></p>
+              </div>
+              <div id="field-context-windows" hidden>
+                <label class="lbl">Long clip · context windows</label>
+                <div id="context-mode-chips" class="chips"></div>
+                <div class="row" style="margin-top:0.5rem">
+                  <div>
+                    <label class="lbl" for="context-length">Window (frames)</label>
+                    <input id="context-length" type="number" min="17" max="241" step="4" value="81" title="Each attention window size (4n+1). Default 81 ≈ 5s @ 16fps." />
+                  </div>
+                  <div>
+                    <label class="lbl" for="context-overlap">Overlap (frames)</label>
+                    <input id="context-overlap" type="number" min="0" max="120" step="1" value="30" title="Frames shared between adjacent windows — more = smoother long-clip continuity." />
+                  </div>
+                </div>
+                <div id="context-overlap-presets" class="chips" style="margin-top:0.4rem"></div>
+                <p class="meta" id="context-windows-hint">
+                  Overlap = how much each window refers to its neighbors. Auto-on when clip &gt; window.
+                </p>
+              </div>
+              <div id="field-continue-secs" hidden>
+                <label class="lbl" for="continue-secs">Extend by (seconds)</label>
+                <input id="continue-secs" type="number" min="1" max="30" step="1" value="5" />
+              </div>
+              <div id="field-continue-method" hidden>
+                <label class="lbl">Continue method</label>
+                <div id="continue-method-chips" class="chips"></div>
+                <p class="meta" id="continue-method-hint">
+                  FLF bridge morphs real parent tail → new chunk head, then double-crossfades.
+                </p>
+              </div>
+              <div id="field-continue-context" hidden>
+                <label class="lbl" for="continue-context">Motion context (frames)</label>
+                <input
+                  id="continue-context"
+                  type="number"
+                  min="1"
+                  max="48"
+                  step="1"
+                  value="16"
+                  title="Last N frames of the source clip fed into I2V as a multi-frame start — carries velocity. 1 = still only."
+                />
+                <div id="continue-context-presets" class="chips" style="margin-top:0.4rem"></div>
+                <p class="meta" id="continue-context-hint">
+                  How much of the parent tail the model sees for motion (not just a still).
+                </p>
+              </div>
+              <div id="field-continue-overlap" hidden>
+                <label class="lbl" for="continue-overlap">Seam blend (seconds)</label>
+                <input
+                  id="continue-overlap"
+                  type="number"
+                  min="0"
+                  max="8"
+                  step="0.25"
+                  value="0.75"
+                  title="Pixel crossfade after joining. 0 = hard cut. Capped at 40% of either clip."
+                />
+                <div id="continue-overlap-presets" class="chips" style="margin-top:0.4rem"></div>
+                <p class="meta" id="continue-overlap-hint">
+                  Softens the cut after the new motion is generated.
+                </p>
+              </div>
+              <p id="size-hint" class="meta"></p>
+            </details>
+
+            <div class="actions">
+              <div class="batch-field" title="Enqueue this many independent jobs">
+                <label class="lbl" for="batch-size" style="margin:0">Batch</label>
+                <input id="batch-size" type="number" min="1" max="8" step="1" value="1" />
+              </div>
+              <button id="btn-gen" type="button" class="primary">Generate</button>
+            </div>
+            <p id="status" class="status"></p>
+          </section>
+
+          <section class="panel result-panel">
+            <label class="lbl">Latest result</label>
+            <div id="result" class="result empty">No image yet.</div>
+          </section>
+        </main>
+
+        <aside class="aside">
+          <section class="panel queue-panel">
+            <div class="gallery-head">
+              <label class="lbl" style="margin:0">Queue</label>
+              <div class="queue-head-actions">
+                <button id="btn-add-break" type="button" class="ghost small" title="Add a breakpoint at the end of the queue">+ Break</button>
+                <button id="btn-unload" type="button" class="ghost small" title="Unload models from VRAM when idle">Unload</button>
+              </div>
+            </div>
+            <p id="queue-banner" class="meta queue-banner" hidden></p>
+            <div id="job-status" class="job-status" hidden>
+              <div class="job-status-row">
+                <span id="status-phase" class="status-phase"></span>
+                <span id="status-pct" class="status-pct"></span>
+              </div>
+              <div class="progress-track" aria-hidden="true">
+                <div id="status-bar" class="progress-bar" style="width:0%"></div>
+              </div>
+              <p id="status-detail" class="status-detail"></p>
+              <div class="job-status-actions">
+                <button type="button" id="btn-cancel-active" class="ghost small danger-btn" hidden>
+                  Stop current job
+                </button>
+              </div>
+            </div>
+            <div id="queue-list" class="queue-list">
+              <p class="meta queue-empty" id="queue-empty">No jobs queued.</p>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ========== HISTORY (gallery + selected) ========== -->
+    <div id="page-history" class="page page-history" role="tabpanel" hidden>
+      <div class="layout layout-history">
+        <section class="panel gallery-panel history-main">
+          <div class="gallery-head">
+            <label class="lbl" style="margin:0">History</label>
+            <button id="btn-refresh-gallery" type="button" class="ghost small">Refresh</button>
+          </div>
+          <p class="meta gallery-hint">Scroll for more · click a card for metadata · Use in jumps back to Create</p>
+          <div id="gallery-scroll" class="gallery-scroll gallery-scroll-page">
+            <div id="gallery" class="gallery-grid"></div>
+            <div id="gallery-sentinel" class="gallery-sentinel" aria-hidden="true"></div>
+            <p id="gallery-loading" class="meta gallery-loading" hidden>Loading…</p>
+          </div>
+          <p id="gallery-empty" class="meta" hidden>No outputs yet — generate something.</p>
+        </section>
+
+        <aside class="aside history-aside">
+          <section class="panel" id="detail-panel" hidden>
+            <div class="gallery-head">
+              <label class="lbl" style="margin:0">Selected</label>
+              <button id="btn-close-detail" type="button" class="ghost small">Close</button>
+            </div>
+            <div id="detail-media" class="detail-media"></div>
+            <dl id="detail-meta" class="detail-dl"></dl>
+            <label class="lbl" id="lbl-use-in">Use in</label>
+            <p id="use-in-hint" class="meta"></p>
+            <div class="use-row" id="use-in-row"></div>
+            <div class="use-row secondary">
+              <button type="button" class="ghost small" id="btn-copy-prompt">Copy prompt</button>
+              <button type="button" class="ghost small" id="btn-copy-seed">Copy seed</button>
+            </div>
+          </section>
+          <section class="panel" id="detail-placeholder">
+            <p class="meta" style="margin:0">Select a history card to inspect metadata and send it into a new job.</p>
+          </section>
+        </aside>
+      </div>
+    </div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

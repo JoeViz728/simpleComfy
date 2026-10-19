@@ -1,0 +1,85 @@
+# Sample video pack. Replace the filenames with weights you have a license to use.
+id: sample
+label: Sample
+description: Two profiles, draft and final, with no model files pinned.
+size_gb_approx: 1
+default_profile: draft
+
+shared:
+  - role: text_encoder
+    filename: text_encoder.safetensors
+    source: ""
+  - role: vae
+    filename: vae.safetensors
+    source: ""
+
+txt2vid_unets:
+  - role: unet
+    filename: t2v_high.safetensors
+    source: ""
+    noise: high
+  - role: unet
+    filename: t2v_low.safetensors
+    source: ""
+    noise: low
+
+img2vid_unets:
+  - role: unet
+    filename: i2v_high.safetensors
+    source: ""
+    noise: high
+  - role: unet
+    filename: i2v_low.safetensors
+    source: ""
+    noise: low
+
+txt2vid_light_loras:
+  - role: lora
+    filename: t2v_draft_high.safetensors
+    source: ""
+    noise: high
+    weight: 1.0
+  - role: lora
+    filename: t2v_draft_low.safetensors
+    source: ""
+    noise: low
+    weight: 1.0
+
+img2vid_light_loras:
+  - role: lora
+    filename: i2v_draft_high.safetensors
+    source: ""
+    noise: high
+    weight: 1.0
+  - role: lora
+    filename: i2v_draft_low.safetensors
+    source: ""
+    noise: low
+    weight: 1.0
+
+profiles:
+  draft:
+    label: Draft
+    description: Short sampler plus the draft LoRAs.
+    use_light_lora: true
+    use_nsfw_lora: false
+    steps: 4
+    cfg: 1.0
+    shift: 5.0
+    high_end_step: 2
+    sampler: euler
+    scheduler: simple
+    negative: "blurry, static, watermark"
+
+  final:
+    label: Final
+    description: Longer sampler, no draft LoRAs.
+    use_light_lora: false
+    use_nsfw_lora: false
+    steps: 24
+    cfg: 4.0
+    shift: 8.0
+    high_end_step: 12
+    sampler: euler
+    scheduler: simple
+    negative: "blurry, static, watermark"
