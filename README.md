@@ -2,11 +2,20 @@
 
 # simpleComfy
 
-A local image and video front end for ComfyUI. Python, FastAPI, and a small browser UI.
+A local front end for ComfyUI. It is meant to use ComfyUI in a simple, user-friendly way, without working in the graph editor.
 
-You pick a preset, write a prompt, and the service builds the ComfyUI graph, queues the job, and pulls any missing weights before it runs. One GPU job runs at a time. The queue keeps its order across restarts, and a running job can be cancelled.
+You pick a preset, write a prompt, and the app builds the graph, queues the job, and pulls missing weights before the job runs. One GPU job runs at a time. The queue keeps its order across restarts, and a running job can be cancelled.
 
-Presets, effects, and video packs are YAML files. The files in this repo are empty samples, so the app runs and the tests pass without pinning anyone's model choices. Point them at weights you have a license to use.
+Presets, effects, and video packs are YAML files. The files in this repo are empty samples. Point them at weights you have a license to use.
+
+## To do
+
+- Refine the workflows.
+- Add a larger viewer for the output image.
+- Add modes for video voiceover and music, image editing with marked focus areas, proper upscaling, character consistency, text to speech, and 3D.
+- Make models modular, so a setup is a choice rather than a fixed pack.
+- Finish the API.
+- Add Windows support.
 
 ## Run
 
@@ -16,7 +25,7 @@ cp config.example.toml config.toml
 ./scripts/start.sh
 ```
 
-The service listens on `127.0.0.1:8790`. ComfyUI has to be running, or named in the config so the service can start it.
+The app listens on `127.0.0.1:8790`. ComfyUI has to be running, or named in the config so the app can start it. This copy is Linux only.
 
 ```bash
 pytest
