@@ -10,12 +10,12 @@ Presets, effects, and video packs are YAML files. The files in this repo are emp
 
 ## To do
 
-- Refine the workflows.
-- Add a larger viewer for the output image.
-- Add modes for video voiceover and music, image editing with marked focus areas, proper upscaling, character consistency, text to speech, and 3D.
-- Make models modular, so a setup is a choice rather than a fixed pack.
-- Finish the API.
-- Add Windows support.
+- [ ] Refine the workflows.
+- [ ] Add a larger viewer for the output image.
+- [ ] Add modes for video voiceover and music, image editing with marked focus areas, proper upscaling, character consistency, text to speech, and 3D.
+- [ ] Make models modular, so a setup is a choice rather than a fixed pack.
+- [ ] Finish the API.
+- [ ] Add Windows support.
 
 ## Run
 
