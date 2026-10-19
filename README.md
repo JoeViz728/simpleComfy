@@ -1,3 +1,5 @@
+**Note.** The code in this project was generated automatically to match my design, and I tested it from the user side.
+
 # simpleComfy
 
 A local image and video front end for ComfyUI. Python, FastAPI, and a small browser UI.
